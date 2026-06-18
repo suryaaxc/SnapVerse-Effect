@@ -1,163 +1,118 @@
-const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 const uploadPrompt = document.getElementById('uploadPrompt');
-const videoCanvas = document.getElementById('videoCanvas');
-const ctx = videoCanvas.getContext('2d');
-const compileBtn = document.getElementById('compileBtn');
-const loader = document.getElementById('loader');
+const outputCanvas = document.getElementById('outputCanvas');
+const ctx = outputCanvas.getContext('2d');
+const webcamVideo = document.getElementById('webcamVideo');
+const startAiBtn = document.getElementById('startAiBtn');
+const aiLoader = document.getElementById('aiLoader');
 
-// Controls Mapping
-const motionProfile = document.getElementById('motionProfile');
-const sliderSpeed = document.getElementById('sliderSpeed');
-const shaderOverlay = document.getElementById('shaderOverlay');
-const speedVal = document.getElementById('speedVal');
+const renderMeshCheck = document.getElementById('renderMeshCheck');
+const overlayImgCheck = document.getElementById('overlayImgCheck');
 
-let loadedImage = null;
-let animationFrameId = null;
-let currentFrameStep = 0;
+let avatarImage = null;
+let faceMeshEngine = null;
+let hardwareCamera = null;
 
-// Drag Drop Event Routing Interceptors
-['dragenter', 'dragover'].forEach(n => dropZone.addEventListener(n, (e) => e.preventDefault()));
-dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    if (e.dataTransfer.files.length) handleImageStream(e.dataTransfer.files[0]);
-});
-uploadPrompt.addEventListener('click', () => fileInput.click());
-fileInput.addEventListener('change', (e) => { if (e.target.files.length) handleImageStream(e.target.files[0]); });
-
-function handleImageStream(file) {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target.result;
-        img.onload = () => {
-            loadedImage = img;
-            uploadPrompt.classList.add('hidden');
-            videoCanvas.classList.remove('hidden');
-            
-            // Lock aspect canvas footprint resolution
-            videoCanvas.width = 720;
-            videoCanvas.height = 1280; // 9:16 Cinematic Short Resolution Setup
-            
-            currentFrameStep = 0;
-            if (animationFrameId) cancelAnimationFrame(animationFrameId);
-            executeRenderLoop(); // Kickoff loop
-            showNotification("Image stream mapped to cinematic timeline pipeline");
+// File Input Handler for Target Avatar
+fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length) {
+        const reader = new FileReader();
+        reader.readAsDataURL(e.target.files[0]);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                avatarImage = img;
+                uploadPrompt.classList.add('hidden');
+                outputCanvas.classList.remove('hidden');
+                
+                // Initialize default canvas frame boundary dimensions
+                outputCanvas.width = 640;
+                outputCanvas.height = 480;
+                
+                // Render initial thumbnail preview
+                ctx.drawImage(avatarImage, 0, 0, 640, 480);
+            };
         };
-    };
+    }
+});
+
+// --- 🧠 CORE GOOGLE MEDIAPEEP TRACKING COMPILER ---
+function initializeFaceMeshAI() {
+    aiLoader.classList.remove('hidden');
+
+    faceMeshEngine = new FaceMesh({
+        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+    });
+
+    // Configure tracking operational variables parameters
+    faceMeshEngine.setOptions({
+        maxNumFaces: 1,
+        refineLandmarks: true,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5
+    });
+
+    // Link asynchronous pipeline response handler
+    faceMeshEngine.onResults(processNeuralResults);
+
+    // Sync HTML5 camera utils script framework with webcam thread
+    hardwareCamera = new Camera(webcamVideo, {
+        onFrame: async () => {
+            await faceMeshEngine.send({ image: webcamVideo });
+        },
+        width: 640,
+        height: 480
+    });
+
+    hardwareCamera.start().then(() => {
+        aiLoader.classList.add('hidden');
+        startAiBtn.disabled = true;
+        startAiBtn.textContent = "AI Mesh Pipeline Locked";
+        startAiBtn.classList.from = "from-emerald-500";
+        startAiBtn.classList.add("from-slate-700", "to-slate-800", "text-slate-500");
+    }).catch(err => {
+        aiLoader.classList.add('hidden');
+        alert("Webcam track generation blocked by secure host constraints.");
+        console.error(err);
+    });
 }
 
-// --- 🌌 CORE RENDER LOOP VECTOR COMPILER ---
-function executeRenderLoop() {
-    if (!loadedImage) return;
-
-    const profile = motionProfile.value;
-    const speedModifier = parseInt(sliderSpeed.value) / 1000;
-    const activeShader = shaderOverlay.value;
-
-    speedVal.textContent = `${(parseInt(sliderSpeed.value)/10).toFixed(1)}x`;
-
-    ctx.clearRect(0, 0, videoCanvas.width, videoCanvas.height);
-    ctx.save();
-
-    let targetWidth = videoCanvas.width;
-    let targetHeight = videoCanvas.height;
-    let dx = 0;
-    let dy = 0;
-    let zoomScale = 1.0;
-
-    // Camera Profile Computations
-    currentFrameStep += speedModifier;
+// --- 📐 HIGH-SPEED VECTOR PROCESSING LOOP ---
+function processNeuralResults(results) {
+    ctx.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
     
-    if (profile === 'zoomIn') {
-        zoomScale = 1.0 + (Math.sin(currentFrameStep * 0.5) * 0.15); // Smooth sinusoidal camera pull
-    } else if (profile === 'panRight') {
-        zoomScale = 1.2; // Keep canvas padded for safe panning bounds
-        dx = Math.sin(currentFrameStep) * 40;
-    } else if (profile === 'dolly') {
-        zoomScale = 1.1 + (Math.cos(currentFrameStep * 0.3) * 0.1);
-        dy = Math.sin(currentFrameStep * 0.5) * 20;
-    }
-
-    // Centered Canvas Transform Scale Matrix
-    ctx.translate(videoCanvas.width / 2 + dx, videoCanvas.height / 2 + dy);
-    ctx.scale(zoomScale, zoomScale);
-    
-    // Draw raw image tracking proportions bound calculations
-    const imgAspect = loadedImage.width / loadedImage.height;
-    const canvasAspect = videoCanvas.width / videoCanvas.height;
-    
-    let drawW, drawH;
-    if (imgAspect > canvasAspect) {
-        drawH = videoCanvas.height;
-        drawW = videoCanvas.height * imgAspect;
+    // 1. If Checked, draw baseline avatar or fallback to webcam feed
+    if (overlayImgCheck.checked && avatarImage) {
+        ctx.drawImage(avatarImage, 0, 0, outputCanvas.width, outputCanvas.height);
     } else {
-        drawW = videoCanvas.width;
-        drawH = videoCanvas.width / imgAspect;
+        ctx.drawImage(results.image, 0, 0, outputCanvas.width, outputCanvas.height);
     }
 
-    ctx.drawImage(loadedImage, -drawW / 2, -drawH / 2, drawW, drawH);
-    ctx.restore();
+    // 2. Compute 468 point coordinate matrix indices
+    if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+        const pointsArray = results.multiFaceLandmarks[0];
 
-    // 🎬 Atmospheric Frame Shader Noise Integrations
-    if (activeShader === 'grain') {
-        ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.07})`; // Instant variable noise layer
-        ctx.fillRect(0, 0, videoCanvas.width, videoCanvas.height);
-    } else if (activeShader === 'cyber') {
-        ctx.fillStyle = `rgba(0, 255, 100, ${Math.random() * 0.04})`;
-        ctx.fillRect(0, 0, videoCanvas.width, videoCanvas.height);
-        // Draw custom scanning bars lines tracking offsets
-        ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
-        for(let i=0; i<videoCanvas.height; i+=8) {
-            ctx.fillRect(0, (i + (currentFrameStep * 20)) % videoCanvas.height, videoCanvas.width, 2);
+        if (renderMeshCheck.checked) {
+            ctx.save();
+            ctx.fillStyle = "rgba(6, 182, 212, 0.8)"; // Electric Cyan Neural Node
+            
+            for (let i = 0; i < pointsArray.length; i++) {
+                const pt = pointsArray[i];
+                // Convert relative dynamic bounds to absolute matrix coordinates mappings
+                const coordinateX = pt.x * outputCanvas.width;
+                const coordinateY = pt.y * outputCanvas.height;
+
+                ctx.beginPath();
+                ctx.arc(coordinateX, coordinateY, 1.5, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+            ctx.restore();
         }
     }
-
-    animationFrameId = requestAnimationFrame(executeRenderLoop);
 }
 
-// Controller Listeners Adjustments
-motionProfile.addEventListener('change', () => currentFrameStep = 0);
-shaderOverlay.addEventListener('change', () => currentFrameStep = 0);
-
-// --- 💾 HIGH-FIDELITY HARDWARE MEDIA RECORDER EXPORTER ENGINE ---
-compileBtn.addEventListener('click', () => {
-    if (!loadedImage) return alert("Ingest an image blueprint first, bhai! 🤦‍♂️");
-    
-    loader.classList.remove('hidden');
-    showNotification("Recording loop buffer... please do not toggle view");
-
-    const videoStream = videoCanvas.captureStream(30); // Capture canvas at 30FPS stream tracks
-    const mediaRecorder = new MediaRecorder(videoStream, { mimeType: 'video/webm;codecs=vp9' });
-    const chunkBuffers = [];
-
-    mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) chunkBuffers.push(e.data); };
-    
-    mediaRecorder.onstop = () => {
-        // Compile binary data arrays straight into file stream download link
-        const videoBlob = new Blob(chunkBuffers, { type: 'video/webm' });
-        const videoUrl = URL.createObjectURL(videoBlob);
-        
-        const downloadLink = document.createElement('a');
-        downloadLink.href = videoUrl;
-        downloadLink.download = `SnapMotion_Flux_${Date.now()}.webm`;
-        downloadLink.click();
-        
-        loader.classList.add('hidden');
-        showNotification("Cinematic Motion Video Saved Successfully!");
-    };
-
-    // Force run record tracks exactly for a 5-second cinematic cycle loop
-    mediaRecorder.start();
-    setTimeout(() => {
-        mediaRecorder.stop();
-    }, 5000); 
+startAiBtn.addEventListener('click', () => {
+    if (!avatarImage) return alert("Upload a portrait file asset first, bhai!");
+    initializeFaceMeshAI();
 });
-
-function showNotification(msg) {
-    const toast = document.getElementById('toast');
-    document.getElementById('toastMsg').textContent = msg;
-    toast.classList.remove('translate-y-20', 'opacity-0');
-    setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0'), 3500);
-}

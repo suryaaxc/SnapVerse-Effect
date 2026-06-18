@@ -3,106 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SnapMotion Flux // Client-Side AI Video Generator</title>
+    <title>SnapVerse AI // Neural Puppet & Face Mesh Studio</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .figma-grid {
-            background-size: 20px 20px;
-            background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
-        }
-    </style>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
 </head>
 <body class="bg-[#090d16] text-slate-200 min-h-screen font-sans overflow-hidden">
 
     <header class="h-16 border-b border-slate-800/60 bg-[#0e1626]/80 backdrop-blur-md flex items-center justify-between px-6 z-50 relative">
         <div class="flex items-center gap-3">
-            <div class="h-8 w-8 bg-gradient-to-tr from-indigo-500 to-rose-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-rose-500/20">M</div>
-            <h1 class="text-lg font-semibold tracking-wider bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">SnapMotion <span class="text-rose-400 font-mono text-sm">Flux Engine v1.0</span></h1>
+            <div class="h-8 w-8 bg-gradient-to-tr from-emerald-500 to-cyan-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-500/20">🧠</div>
+            <h1 class="text-lg font-semibold tracking-wider bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">SnapVerse <span class="text-emerald-400 font-mono text-sm">AI Face Mesh v1.5</span></h1>
         </div>
-        <div>
-            <button id="compileBtn" class="px-5 py-2 bg-gradient-to-r from-rose-500 to-indigo-600 hover:from-rose-600 hover:to-indigo-700 text-sm font-semibold rounded-lg shadow-lg shadow-rose-500/20 transition-all active:scale-95 flex items-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Compile Video Stream
-            </button>
+        <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-emerald-500 animate-ping"></span>
+            <span class="text-xs font-mono text-emerald-400 tracking-wider">LOCAL AI INFERENCE ACTIVE (WebGL)</span>
         </div>
     </header>
 
     <main class="flex h-[calc(100vh-64px)] w-full">
         
-        <section id="dropZone" class="flex-1 figma-grid bg-[#05070f] relative flex items-center justify-center p-8 transition-all duration-300">
+        <section class="flex-1 bg-[#05070f] relative flex items-center justify-center p-8 transition-all duration-300">
             
-            <canvas id="videoCanvas" class="hidden max-h-[75vh] max-w-full shadow-2xl rounded-xl border border-slate-800 bg-black"></canvas>
+            <canvas id="outputCanvas" class="hidden max-h-[75vh] max-w-full shadow-2xl rounded-2xl border border-slate-800 bg-black"></canvas>
 
-            <div id="uploadPrompt" class="text-center p-8 border-2 border-dashed border-slate-700/60 hover:border-rose-500/50 bg-[#0f172a]/40 backdrop-blur-sm rounded-2xl max-w-md transition-all cursor-pointer group">
-                <div class="w-16 h-16 bg-slate-800/80 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:bg-rose-500/10 transition-all border border-slate-700">
-                    <i class="fa-solid fa-clapperboard text-2xl text-slate-400 group-hover:text-rose-400 transition-all"></i>
+            <div id="uploadPrompt" class="text-center p-8 border-2 border-dashed border-slate-700/60 hover:border-emerald-500/50 bg-[#0f172a]/40 backdrop-blur-sm rounded-2xl max-w-md transition-all cursor-pointer group">
+                <div class="w-16 h-16 bg-slate-800/80 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 group-hover:bg-emerald-500/10 transition-all border border-slate-700">
+                    <i class="fa-solid fa-brain text-2xl text-slate-400 group-hover:text-emerald-400 transition-all"></i>
                 </div>
-                <h3 class="text-base font-semibold text-slate-200">Drop an image to generate motion video</h3>
-                <p class="text-xs text-slate-400 mt-1 mb-4">Transforms static layers into cinematic MP4 loop buffers</p>
-                <label class="px-4 py-2 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-semibold rounded-md border border-rose-500/30 cursor-pointer transition-all">
-                    Browse Asset
+                <h3 class="text-base font-semibold text-slate-200">Ingest Avatar Source Image</h3>
+                <p class="text-xs text-slate-400 mt-1 mb-4">Upload a clear portrait photo to link with the neural tracker</p>
+                <label class="px-4 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-md border border-emerald-500/30 cursor-pointer transition-all">
+                    Browse File
                     <input type="file" id="fileInput" class="hidden" accept="image/*">
                 </label>
             </div>
 
-            <div id="loader" class="hidden absolute inset-0 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center gap-4 z-40">
-                <div class="w-12 h-12 border-4 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
-                <p class="text-sm font-mono tracking-widest text-rose-400 animate-pulse">LOCKING MOTION BUFFERS... ENCODING 4K WEB-STREAM</p>
-            </div>
+            <video id="webcamVideo" class="hidden" playsinline></video>
 
-            <div id="toast" class="absolute bottom-6 left-6 transform translate-y-20 opacity-0 bg-slate-900/90 border border-emerald-500/30 text-emerald-400 px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 transition-all duration-300 backdrop-blur-md z-50">
-                <div class="h-6 w-6 bg-emerald-500/10 rounded-full flex items-center justify-center"><i class="fa-solid fa-check text-xs"></i></div>
-                <span id="toastMsg" class="text-xs font-medium tracking-wide">Motion Compiler Triggered</span>
+            <div id="aiLoader" class="hidden absolute inset-0 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center gap-4 z-40">
+                <div class="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                <p class="text-sm font-mono tracking-widest text-emerald-400 animate-pulse">COMPILING WEBGL SHADERS... BOOTING NEURAL NETWORK MODEL</p>
             </div>
         </section>
 
-        <aside class="w-80 border-l border-slate-800/60 bg-[#0e1424]/90 backdrop-blur-md p-6 flex flex-col gap-6 overflow-y-auto h-full">
+        <aside class="w-80 border-l border-slate-800/60 bg-[#0e1424]/90 backdrop-blur-md p-6 flex flex-col gap-6 overflow-y-auto h-full shadow-2xl">
             <div>
-                <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Motion Engine</h2>
-                <p class="text-[11px] text-slate-500">Configure client camera mapping variables</p>
+                <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Neural Console</h2>
+                <p class="text-[11px] text-slate-500">Configure your local machine learning pipelines</p>
             </div>
 
-            <div class="flex flex-col gap-2">
-                <label class="text-xs font-medium text-slate-300">Cinematic Camera Profile</label>
-                <select id="motionProfile" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-rose-400 cursor-pointer">
-                    <option value="zoomIn">Slow Cinematic Zoom-In</option>
-                    <option value="panRight">Horizon Pan-Right Scan</option>
-                    <option value="dolly">Dynamic Dolly Shifting</option>
-                </select>
+            <div class="flex flex-col gap-3">
+                <button id="startAiBtn" class="w-full py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-sm font-semibold rounded-lg shadow-lg shadow-emerald-500/10 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-power-off"></i> Initialize Live AI Tracker
+                </button>
             </div>
 
             <hr class="border-slate-800/60">
 
-            <div class="flex flex-col gap-5">
+            <div class="flex flex-col gap-4">
                 <div>
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Velocity Bounds</h2>
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Visualization Mode</h2>
+                    <p class="text-[11px] text-slate-500">Select active vector path overlays</p>
                 </div>
 
-                <div class="flex flex-col gap-2">
-                    <div class="flex justify-between text-xs font-medium text-slate-400">
-                        <span>Movement Speed</span>
-                        <span id="speedVal" class="font-mono text-rose-400 text-[11px]">1.5x</span>
-                    </div>
-                    <input type="range" id="sliderSpeed" min="5" max="30" value="15" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-rose-400">
-                </div>
-            </div>
-
-            <hr class="border-slate-800/60">
-
-            <div class="flex flex-col gap-5">
-                <div>
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Atmospheric Shaders</h2>
-                    <p class="text-[11px] text-slate-500">Inject dynamic noise & overlay patterns</p>
-                </div>
-
-                <div class="flex flex-col gap-2">
-                    <label class="text-xs font-medium text-slate-300">Active Film Filter</label>
-                    <select id="shaderOverlay" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-rose-400 cursor-pointer">
-                        <option value="none">Standard Clean Frame</option>
-                        <option value="grain">Retro Vintage Film Grain</option>
-                        <option value="cyber">Cyberpunk Matrix Noise</option>
-                    </select>
+                <div class="flex flex-col gap-3">
+                    <label class="flex items-center justify-between text-xs text-slate-300 bg-slate-900 border border-slate-800 rounded-lg p-3 cursor-pointer">
+                        <span>Show Neural Mesh Points</span>
+                        <input type="checkbox" id="renderMeshCheck" checked class="w-4 h-4 rounded bg-slate-800 accent-emerald-400 cursor-pointer">
+                    </label>
+                    <label class="flex items-center justify-between text-xs text-slate-300 bg-slate-900 border border-slate-800 rounded-lg p-3 cursor-pointer">
+                        <span>Overlay Source Image Texture</span>
+                        <input type="checkbox" id="overlayImgCheck" checked class="w-4 h-4 rounded bg-slate-800 accent-emerald-400 cursor-pointer">
+                    </label>
                 </div>
             </div>
         </aside>
