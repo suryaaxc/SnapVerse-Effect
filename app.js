@@ -66,11 +66,10 @@ async function computeBondingMatrix() {
     if (!imgA || !imgB) return alert("Please upload both portraits first, bhai! 🤦‍♂️");
     
     calculateBtn.textContent = "TRACING PLANETARY GRIDS...";
-    resultsPanel.classList.add('opacity-10', 'scale-95'); // Dim the panel while tracing runs
+    resultsPanel.classList.add('opacity-10', 'scale-95'); 
     
     await analyzeFaceStructures();
 
-    // Incase image angles are wide, set proportional normalizers benchmarks
     if (ratioA === 0) ratioA = 0.83;
     if (ratioB === 0) ratioB = 0.80;
 
@@ -80,7 +79,7 @@ async function computeBondingMatrix() {
     if (coreScore > 98) coreScore = 96;
     if (coreScore < 45) coreScore = 62;
 
-    // Multidimensional Astro Layout Arrays Computations
+    // Multidimensional Astro Array Logic Matrix
     let loveVal = Math.floor(coreScore + (Math.random() * 6));
     let friendVal = Math.floor((100 - structuralDelta * 90) - (Math.random() * 8));
     let partnerVal = Math.floor(coreScore * 0.96 + (Math.random() * 4));
@@ -91,7 +90,7 @@ async function computeBondingMatrix() {
     loveVal = lockBounds(loveVal); friendVal = lockBounds(friendVal); partnerVal = lockBounds(partnerVal);
     hateVal = lockBounds(hateVal); enemyVal = lockBounds(enemyVal);
 
-    // Inject Text readouts and update score indicators
+    // Sync baseline numbers text parameters
     scoreDisplay.textContent = `${coreScore}%`;
     vLove.textContent = `${loveVal}%`; barLove.style.width = `${loveVal}%`;
     vFriend.textContent = `${friendVal}%`; barFriend.style.width = `${friendVal}%`;
@@ -99,7 +98,7 @@ async function computeBondingMatrix() {
     vHate.textContent = `${hateVal}%`; barHate.style.width = `${hateVal}%`;
     vEnemy.textContent = `${enemyVal}%`; barEnemy.style.width = `${enemyVal}%`;
 
-    // Mapping Astrological Text Matrices Definitions
+    // Astrological Analysis Mapping Interface Router
     if (coreScore > 82) {
         bondName.textContent = "🌌 Venus-Jupiter Perfect Trine Alignment";
         bondDesc = `Your facial structures mirror an ancient 120-degree alignment. Venus drives immediate compatibility, lowering conversational barriers. With a 5-Star Friendship profile, your charts lock a high-retention lifecycle. Perfect dual matrix harmony.`;
@@ -111,10 +110,12 @@ async function computeBondingMatrix() {
         bondDesc = `Your charts intercept on a conflicting geometric axis. Arch-Enemy multipliers point to rapid ego trigger zones. However, cosmic paradox rules dictate that this extreme polarization creates intense magnetic pull. A wild ride with massive separate growth vectors.`;
     }
 
-    // 🔥 THE CRITICAL FIX FOR IMAGE_394102.JPG: REMOVE DIM STATE & BLAST HARDCORE GLOW CLASS
+    // 🔥 FIX: REMOVE DIM-BARRIERS & OVERWRITE ABSOLUTE PROGRAMMATIC INLINE NEON RADIANCE
     resultsPanel.classList.remove('opacity-10', 'pointer-events-none', 'scale-95');
     resultsPanel.classList.add('opacity-100', 'scale-100');
-    scoreDisplay.classList.add('text-glow-hardcore');
+    
+    scoreDisplay.style.color = "#ffffff";
+    scoreDisplay.style.textShadow = "0 0 12px #f43f5e, 0 0 25px #ec4899, 0 0 45px #a855f7, 0 0 70px #6366f1";
 
     calculateBtn.textContent = "🔮 Read Astro-Neural Charts";
 }

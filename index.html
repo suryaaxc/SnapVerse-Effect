@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SnapMatch Flux // AI Astro-Bonding Matrix</title>
-    <!-- Tailwind CSS Engine -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- FontAwesome Premium Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google MediaPipe Framework Components -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
     
@@ -22,31 +19,22 @@
             box-shadow: inset 0 0 30px rgba(244, 63, 94, 0.5), 0 0 40px rgba(139, 92, 246, 0.4);
             animation: pulseAstro 4s infinite ease-in-out;
         }
-        /* 🔥 THE MAXIMUM POWER NEON GLOW STYLE BLOCK FOR IMAGE_394102.JPG FIX */
-        .text-glow-hardcore {
-            color: #ffffff !important;
-            text-shadow: 0 0 10px #f43f5e, 0 0 20px #ec4899, 0 0 40px #a855f7, 0 0 60px #6366f1 !important;
-        }
     </style>
 </head>
 <body class="bg-[#05040a] text-slate-200 min-h-screen font-sans overflow-x-hidden">
 
-    <!-- Top Navigation Bar -->
     <header class="h-16 border-b border-rose-950/40 bg-[#0c0817]/80 backdrop-blur-md flex items-center justify-between px-6 z-50 relative">
         <div class="flex items-center gap-3">
             <div class="h-8 w-8 bg-gradient-to-tr from-rose-500 to-violet-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-rose-500/20">🔮</div>
             <h1 class="text-lg font-semibold tracking-wider bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">SnapMatch <span class="text-rose-400 font-mono text-sm">AstroFlux v1.5</span></h1>
         </div>
-        <div class="text-xs font-mono text-pink-400 border border-pink-500/30 bg-pink-500/5 px-3 py-1 rounded-full text-glow-hardcore">ASTRO-NEURAL GRID RE-ROUTED</div>
+        <div class="text-xs font-mono text-pink-400 border border-pink-500/30 bg-pink-500/5 px-3 py-1 rounded-full">ASTRO-NEURAL GRID RE-ROUTED</div>
     </header>
 
-    <!-- Main Studio Layout Grid -->
     <main class="flex flex-col lg:flex-row h-[calc(100vh-64px)] w-full overflow-hidden">
         
-        <!-- Left Section: Dual Ingestion Slots -->
         <section class="flex-1 bg-[#030205] p-6 flex flex-col items-center justify-center gap-6 overflow-y-auto">
             <div class="flex flex-col md:flex-row gap-6 w-full max-w-2xl justify-center">
-                <!-- Slot 1: Person A -->
                 <div class="flex-1 border border-slate-800/80 bg-[#120f1d]/30 hover:border-rose-500/40 rounded-2xl p-6 text-center relative min-h-[240px] flex flex-col items-center justify-center transition-all" id="boxA">
                     <input type="file" id="fileA" class="hidden" accept="image/*">
                     <div class="inner-content cursor-pointer" onclick="document.getElementById('fileA').value = ''; document.getElementById('fileA').click()">
@@ -56,7 +44,6 @@
                     <canvas id="canvasA" class="absolute inset-0 w-full h-full object-cover rounded-2xl hidden"></canvas>
                 </div>
 
-                <!-- Slot 2: Person B -->
                 <div class="flex-1 border border-slate-800/80 bg-[#120f1d]/30 hover:border-violet-500/40 rounded-2xl p-6 text-center relative min-h-[240px] flex flex-col items-center justify-center transition-all" id="boxB">
                     <input type="file" id="fileB" class="hidden" accept="image/*">
                     <div class="inner-content cursor-pointer" onclick="document.getElementById('fileB').value = ''; document.getElementById('fileB').click()">
@@ -72,7 +59,6 @@
             </button>
         </section>
 
-        <!-- Right Section: Results Framework Console (Fixed Grid for image_394102.jpg) -->
         <aside class="w-full lg:w-[460px] bg-[#09070f]/95 backdrop-blur-md p-6 flex flex-col gap-6 overflow-y-auto h-full shadow-2xl border-l border-rose-950/20">
             <div>
                 <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-1">Cosmic Analysis</h2>
@@ -81,47 +67,38 @@
 
             <hr class="border-slate-800/60">
 
-            <!-- Circular Loading Metrics Display with Glowing Classes -->
-            <div id="resultsPanel" class="opacity-10 pointer-events-none transition-all duration-500 transform scale-95 flex flex-col items-center gap-6浏览 pb-6">
+            <div id="resultsPanel" class="opacity-10 pointer-events-none transition-all duration-500 transform scale-95 flex flex-col items-center gap-6 pb-6">
                 
-                <!-- 🔥 RADIAL RING WITH ULTRA GLOW CORE SCORING -->
                 <div class="relative w-44 h-44 rounded-full border-2 border-pink-500/20 flex flex-col items-center justify-center bg-pink-950/5 neon-astro-ring">
                     <span class="text-[10px] font-mono tracking-widest text-pink-400 uppercase">Core Sync</span>
                     <div class="text-4xl font-mono font-black mt-0.5" id="scoreDisplay">0%</div>
                 </div>
 
-                <!-- 📊 MULTI-DIMENSIONAL SCORE MATRIX BARS -->
                 <div class="w-full bg-slate-900/40 border border-slate-800/60 rounded-xl p-4 flex flex-col gap-3 shadow-lg">
                     <h3 class="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1">Matrix Spectrum Vectors</h3>
                     
-                    <!-- Love -->
                     <div class="space-y-1">
                         <div class="flex justify-between text-xs font-medium"><span class="text-rose-400"><i class="fa-solid fa-heart mr-1"></i> Love Velocity</span><span id="vLove" class="font-mono text-rose-400">0%</span></div>
                         <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden"><div id="barLove" class="bg-gradient-to-r from-rose-500 to-pink-500 h-full w-0 transition-all duration-1000 shadow-[0_0_10px_#f43f5e]"></div></div>
                     </div>
-                    <!-- Friendship -->
                     <div class="space-y-1">
                         <div class="flex justify-between text-xs font-medium"><span class="text-cyan-400"><i class="fa-solid fa-handshake mr-1"></i> Friendship Sync</span><span id="vFriend" class="font-mono text-cyan-400">0%</span></div>
                         <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden"><div id="barFriend" class="bg-gradient-to-r from-cyan-500 to-blue-500 h-full w-0 transition-all duration-1000 shadow-[0_0_10px_#06b6d4]"></div></div>
                     </div>
-                    <!-- Life Partner -->
                     <div class="space-y-1">
                         <div class="flex justify-between text-xs font-medium"><span class="text-amber-400"><i class="fa-solid fa-ring mr-1"></i> Destiny Partner</span><span id="vPartner" class="font-mono text-amber-400">0%</span></div>
                         <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden"><div id="barPartner" class="bg-gradient-to-r from-amber-400 to-orange-500 h-full w-0 transition-all duration-1000 shadow-[0_0_10px_#fbbf24]"></div></div>
                     </div>
-                    <!-- Hate -->
                     <div class="space-y-1">
                         <div class="flex justify-between text-xs font-medium"><span class="text-orange-500"><i class="fa-solid fa-skull mr-1"></i> Friction Rate</span><span id="vHate" class="font-mono text-orange-500">0%</span></div>
                         <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden"><div id="barHate" class="bg-gradient-to-r from-orange-500 to-red-500 h-full w-0 transition-all duration-1000"></div></div>
                     </div>
-                    <!-- Enemy -->
                     <div class="space-y-1">
-                        <div class="flex justify-between text-xs font-medium"><span class="text-red-600"><i class="fa-solid fa-skull-crossbones mr-1"></i> Arch-Enemy Flux</span><span id="vEnemy" class="font-mono text-red-500">0%</span></div>
-                        <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden"><div id="barEnemy" class="bg-gradient-to-r from-red-600 to-rose-700 h-full w-0 transition-all duration-1000"></div></div>
+                        <div class="flex justify-between text-xs font-medium"><span class="text-red-500"><i class="fa-solid fa-skull-crossbones mr-1"></i> Arch-Enemy Flux</span><span id="vEnemy" class="font-mono text-red-500">0%</span></div>
+                        <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden"><div id="barEnemy" class="bg-gradient-to-r from-red-600 to-rose-700 h-full w-0 transition-all duration-1000 shadow-[0_0_10px_#red-500]"></div></div>
                     </div>
                 </div>
 
-                <!-- 🔮 ASTROLOGICAL REASON LAYOUT MATRIX -->
                 <div class="w-full flex flex-col gap-4">
                     <div class="bg-gradient-to-br from-pink-950/20 to-violet-950/20 border border-pink-500/20 rounded-xl p-4 shadow-lg">
                         <h4 class="text-xs font-bold uppercase text-pink-400 tracking-wider flex items-center gap-1.5"><i class="fa-solid fa-moon animate-bounce"></i> Planetary Dynamic Alignment</h4>
