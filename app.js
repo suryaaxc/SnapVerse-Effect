@@ -66,7 +66,8 @@ async function computeBondingMatrix() {
     if (!imgA || !imgB) return alert("Please upload both portraits first, bhai! 🤦‍♂️");
     
     calculateBtn.textContent = "TRACING PLANETARY GRIDS...";
-    resultsPanel.classList.add('opacity-10', 'scale-95'); 
+    resultsPanel.style.opacity = "0.1";
+    resultsPanel.style.transform = "scale(0.95)";
     
     await analyzeFaceStructures();
 
@@ -79,7 +80,6 @@ async function computeBondingMatrix() {
     if (coreScore > 98) coreScore = 96;
     if (coreScore < 45) coreScore = 62;
 
-    // Multidimensional Astro Array Logic Matrix
     let loveVal = Math.floor(coreScore + (Math.random() * 6));
     let friendVal = Math.floor((100 - structuralDelta * 90) - (Math.random() * 8));
     let partnerVal = Math.floor(coreScore * 0.96 + (Math.random() * 4));
@@ -87,10 +87,9 @@ async function computeBondingMatrix() {
     let enemyVal = Math.floor((100 - friendVal) * 0.5);
 
     const lockBounds = (v) => Math.max(5, Math.min(99, v));
-    loveVal = lockBounds(loveVal); friendVal = lockBounds(lockBounds(friendVal)); partnerVal = lockBounds(partnerVal);
+    loveVal = lockBounds(loveVal); friendVal = lockBounds(friendVal); partnerVal = lockBounds(partnerVal);
     hateVal = lockBounds(hateVal); enemyVal = lockBounds(enemyVal);
 
-    // Sync numbers & text values
     scoreDisplay.textContent = `${coreScore}%`;
     vLove.textContent = `${loveVal}%`; barLove.style.width = `${loveVal}%`;
     vFriend.textContent = `${friendVal}%`; barFriend.style.width = `${friendVal}%`;
@@ -109,13 +108,13 @@ async function computeBondingMatrix() {
         bondDesc = `Your charts intercept on a conflicting geometric axis. Arch-Enemy multipliers point to rapid ego trigger zones. However, cosmic paradox rules dictate that this extreme polarization creates intense magnetic pull. A wild ride with massive separate growth vectors.`;
     }
 
-    // 🔥 THE DEFINITIVE VISIBILITY FIX
-    resultsPanel.classList.remove('opacity-10', 'pointer-events-none', 'scale-95');
-    resultsPanel.classList.add('opacity-100', 'scale-100');
+    // 🔥 ABSOLUTE FIX: DIRECT JAVASCRIPT LAYER STYLE ASSIGNMENTS WITHOUT TAILWIND CLASHES
+    resultsPanel.style.opacity = "1";
+    resultsPanel.style.pointerEvents = "auto";
+    resultsPanel.style.transform = "scale(1)";
     
-    // Explicit inline shadow forced at the execution layer
     scoreDisplay.style.color = "#ffffff";
-    scoreDisplay.style.textShadow = "0 0 12px #f43f5e, 0 0 25px #ec4899, 0 0 45px #a855f7, 0 0 70px #6366f1";
+    scoreDisplay.style.textShadow = "0 0 15px #f43f5e, 0 0 30px #ec4899, 0 0 50px #a855f7, 0 0 75px #6366f1";
 
     calculateBtn.textContent = "🔮 Read Astro-Neural Charts";
 }
@@ -168,9 +167,8 @@ function handleImageStreamB(file) {
 
 // --- ⌨️ UNIVERSAL ENTER KEY TRACING ---
 window.addEventListener('keydown', (e) => {
-    // Agar enter press hua h bina shift key ke (Kahin par bhi viewport me)
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        computeBondingMatrix(); // Run calculations immediately
+        computeBondingMatrix(); 
     }
 });
