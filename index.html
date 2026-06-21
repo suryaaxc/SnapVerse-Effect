@@ -12,12 +12,17 @@
     
     <style>
         @keyframes pulseAstro {
-            0%, 100% { filter: drop-shadow(0 0 20px rgba(244, 63, 94, 0.4)); transform: scale(1); }
-            50% { filter: drop-shadow(0 0 40px rgba(139, 92, 246, 0.7)); transform: scale(1.02); }
+            0%, 100__ { filter: drop-shadow(0 0 20px rgba(244, 63, 94, 0.4)); transform: scale(1); }
+            50__ { filter: drop-shadow(0 0 40px rgba(139, 92, 246, 0.7)); transform: scale(1.02); }
         }
         .neon-astro-ring {
             box-shadow: inset 0 0 30px rgba(244, 63, 94, 0.5), 0 0 40px rgba(139, 92, 246, 0.4);
             animation: pulseAstro 4s infinite ease-in-out;
+        }
+        /* 🔥 THE MAXIMUM POWER NEON GLOW FOR INTENSITY FIX */
+        .text-glow-hardcore {
+            color: #ffffff !important;
+            text-shadow: 0 0 10px #f43f5e, 0 0 20px #ec4899, 0 0 40px #a855f7, 0 0 60px #6366f1 !important;
         }
     </style>
 </head>
@@ -28,7 +33,7 @@
             <div class="h-8 w-8 bg-gradient-to-tr from-rose-500 to-violet-600 rounded-lg flex items-center justify-center text-white font-bold shadow-lg shadow-rose-500/20">🔮</div>
             <h1 class="text-lg font-semibold tracking-wider bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">SnapMatch <span class="text-rose-400 font-mono text-sm">AstroFlux v1.5</span></h1>
         </div>
-        <div class="text-xs font-mono text-pink-400 border border-pink-500/30 bg-pink-500/5 px-3 py-1 rounded-full">ASTRO-NEURAL GRID RE-ROUTED</div>
+        <div class="text-xs font-mono text-pink-400 border border-pink-500/30 bg-pink-500/5 px-3 py-1 rounded-full text-glow-hardcore">ASTRO-NEURAL GRID RE-ROUTED</div>
     </header>
 
     <main class="flex flex-col lg:flex-row h-[calc(100vh-64px)] w-full overflow-hidden">
@@ -71,7 +76,7 @@
                 
                 <div class="relative w-44 h-44 rounded-full border-2 border-pink-500/20 flex flex-col items-center justify-center bg-pink-950/5 neon-astro-ring">
                     <span class="text-[10px] font-mono tracking-widest text-pink-400 uppercase">Core Sync</span>
-                    <div class="text-4xl font-mono font-black mt-0.5" id="scoreDisplay">0%</div>
+                    <div class="text-4xl font-mono font-black mt-0.5 animate-pulse" id="scoreDisplay">0%</div>
                 </div>
 
                 <div class="w-full bg-slate-900/40 border border-slate-800/60 rounded-xl p-4 flex flex-col gap-3 shadow-lg">
@@ -91,7 +96,7 @@
                     </div>
                     <div class="space-y-1">
                         <div class="flex justify-between text-xs font-medium"><span class="text-orange-500"><i class="fa-solid fa-skull mr-1"></i> Friction Rate</span><span id="vHate" class="font-mono text-orange-500">0%</span></div>
-                        <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden"><div id="barHate" class="bg-gradient-to-r from-orange-500 to-red-500 h-full w-0 transition-all duration-1000"></div></div>
+                        <div class="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden"><div id="barHate" class="bg-gradient-to-r from-orange-500 to-red-500 h-full w-0 transition-all duration-1000 shadow-[0_0_10px_#orange-500]"></div></div>
                     </div>
                     <div class="space-y-1">
                         <div class="flex justify-between text-xs font-medium"><span class="text-red-500"><i class="fa-solid fa-skull-crossbones mr-1"></i> Arch-Enemy Flux</span><span id="vEnemy" class="font-mono text-red-500">0%</span></div>

@@ -87,10 +87,10 @@ async function computeBondingMatrix() {
     let enemyVal = Math.floor((100 - friendVal) * 0.5);
 
     const lockBounds = (v) => Math.max(5, Math.min(99, v));
-    loveVal = lockBounds(loveVal); friendVal = lockBounds(friendVal); partnerVal = lockBounds(partnerVal);
+    loveVal = lockBounds(loveVal); friendVal = lockBounds(lockBounds(friendVal)); partnerVal = lockBounds(partnerVal);
     hateVal = lockBounds(hateVal); enemyVal = lockBounds(enemyVal);
 
-    // Sync baseline numbers text parameters
+    // Sync numbers & text values
     scoreDisplay.textContent = `${coreScore}%`;
     vLove.textContent = `${loveVal}%`; barLove.style.width = `${loveVal}%`;
     vFriend.textContent = `${friendVal}%`; barFriend.style.width = `${friendVal}%`;
@@ -98,7 +98,6 @@ async function computeBondingMatrix() {
     vHate.textContent = `${hateVal}%`; barHate.style.width = `${hateVal}%`;
     vEnemy.textContent = `${enemyVal}%`; barEnemy.style.width = `${enemyVal}%`;
 
-    // Astrological Analysis Mapping Interface Router
     if (coreScore > 82) {
         bondName.textContent = "🌌 Venus-Jupiter Perfect Trine Alignment";
         bondDesc = `Your facial structures mirror an ancient 120-degree alignment. Venus drives immediate compatibility, lowering conversational barriers. With a 5-Star Friendship profile, your charts lock a high-retention lifecycle. Perfect dual matrix harmony.`;
@@ -110,10 +109,11 @@ async function computeBondingMatrix() {
         bondDesc = `Your charts intercept on a conflicting geometric axis. Arch-Enemy multipliers point to rapid ego trigger zones. However, cosmic paradox rules dictate that this extreme polarization creates intense magnetic pull. A wild ride with massive separate growth vectors.`;
     }
 
-    // 🔥 FIX: REMOVE DIM-BARRIERS & OVERWRITE ABSOLUTE PROGRAMMATIC INLINE NEON RADIANCE
+    // 🔥 THE DEFINITIVE VISIBILITY FIX
     resultsPanel.classList.remove('opacity-10', 'pointer-events-none', 'scale-95');
     resultsPanel.classList.add('opacity-100', 'scale-100');
     
+    // Explicit inline shadow forced at the execution layer
     scoreDisplay.style.color = "#ffffff";
     scoreDisplay.style.textShadow = "0 0 12px #f43f5e, 0 0 25px #ec4899, 0 0 45px #a855f7, 0 0 70px #6366f1";
 
@@ -121,3 +121,56 @@ async function computeBondingMatrix() {
 }
 
 calculateBtn.addEventListener('click', computeBondingMatrix);
+
+// --- 📋 CLIPBOARD PASTE INTERCEPTION LOOP (CTRL+V FIXED) ---
+window.addEventListener('paste', (e) => {
+    const clipboardItems = e.clipboardData.items;
+    for (let i = 0; i < clipboardItems.length; i++) {
+        if (clipboardItems[i].type.indexOf('image') !== -1) {
+            const file = clipboardItems[i].getAsFile();
+            if (file) {
+                if (!imgA) {
+                    handleImageStreamA(file);
+                } else if (!imgB) {
+                    handleImageStreamB(file);
+                } else {
+                    alert("Both slots occupied, bhai! Refresh to paste fresh assets.");
+                }
+            }
+            break;
+        }
+    }
+});
+
+function handleImageStreamA(file) {
+    const reader = new FileReader(); reader.readAsDataURL(file);
+    reader.onload = (event) => {
+        imgA = new Image(); imgA.src = event.target.result;
+        imgA.onload = () => {
+            canvasA.classList.remove('hidden');
+            canvasA.width = 300; canvasA.height = 300;
+            canvasA.getContext('2d').drawImage(imgA, 0, 0, 300, 300);
+        };
+    };
+}
+
+function handleImageStreamB(file) {
+    const reader = new FileReader(); reader.readAsDataURL(file);
+    reader.onload = (event) => {
+        imgB = new Image(); imgB.src = event.target.result;
+        imgB.onload = () => {
+            canvasB.classList.remove('hidden');
+            canvasB.width = 300; canvasB.height = 300;
+            canvasB.getContext('2d').drawImage(imgB, 0, 0, 300, 300);
+        };
+    };
+}
+
+// --- ⌨️ UNIVERSAL ENTER KEY TRACING ---
+window.addEventListener('keydown', (e) => {
+    // Agar enter press hua h bina shift key ke (Kahin par bhi viewport me)
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        computeBondingMatrix(); // Run calculations immediately
+    }
+});
